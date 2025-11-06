@@ -37,13 +37,14 @@ def create_database():
 
     # PRODUCTS Table
     cursor.execute("""
-    CREATE TABLE IF NOT EXISTS products (
+    CREATE TABLE IF NOT EXISTS product (
         product_id INT AUTO_INCREMENT PRIMARY KEY,
         name VARCHAR(150) NOT NULL,
         description TEXT,
         price DECIMAL(10,2) NOT NULL,
         stock INT DEFAULT 0,
         category_id INT,
+        details VARCHAR(255),
         image_url VARCHAR(255),
         FOREIGN KEY (category_id) REFERENCES category(category_id) ON DELETE SET NULL
     );
@@ -57,7 +58,7 @@ def create_database():
         product_id INT,
         quantity INT DEFAULT 1,
         FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
-        FOREIGN KEY (product_id) REFERENCES products(product_id) ON DELETE CASCADE
+        FOREIGN KEY (product_id) REFERENCES product(product_id) ON DELETE CASCADE
     );
     """)
 
@@ -84,9 +85,22 @@ def create_database():
         FOREIGN KEY (order_id) REFERENCES orders(order_id) ON DELETE CASCADE
     );
     """)
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS order_items (
+    item_id INT AUTO_INCREMENT PRIMARY KEY,
+    order_id INT,
+    product_id INT,
+    quantity INT,
+    price DECIMAL(10,2),
+    FOREIGN KEY (order_id) REFERENCES orders(order_id) ON DELETE CASCADE,
+    FOREIGN KEY (product_id) REFERENCES product(product_id) ON DELETE CASCADE
+);
+    """)
+
 
     connection.commit()
     cursor.close()
     connection.close()
 
     print("Database and tables created successfully!")
+create_database()
