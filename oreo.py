@@ -3,10 +3,7 @@ from tkinter import messagebox
 from PIL import Image, ImageTk
 import mysql.connector
 from cart import CartWindow
-import io
-import requests
 import os
-
 from login import login_window
 
 # ---------- Database Connection ----------
@@ -110,10 +107,6 @@ class Dashboard(tk.Tk):
                 if product[4] and os.path.exists(product[4]):
                     # Local file
                     img = Image.open(product[4])
-                elif product[4]:
-                    # URL
-                    response = requests.get(product[4], timeout=5)
-                    img = Image.open(io.BytesIO(response.content))
                 else:
                     raise Exception("No image provided")
 
